@@ -1,4 +1,4 @@
-<h1 align="center">bestswap-contract</h1>
+<h1 align="center">stablexswap3.0-contract</h1>
 
 ## Project Setup
 ### Install Dependencies
