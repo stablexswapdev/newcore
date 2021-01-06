@@ -2,14 +2,11 @@
  *Submitted for verification at BscScan.com on 2020-11-08
 */
 
-/**
- *Submitted for verification at Etherscan.io on 2020-08-13
-*/
 
 pragma solidity 0.5.8;
 pragma experimental ABIEncoderV2;
 
-interface IUnisavePair {
+interface IStableXPair {
     function depositAll0() external;  
     function depositAll1() external;
     function depositSome0(uint) external;
@@ -21,14 +18,15 @@ interface IUnisavePair {
     function token1() external view returns (address);           
 }
 
-interface IUnisaveFactory {
+interface IStableXFactory {
     function getPair(address tokenA, address tokenB) external view returns (address pair);
 }
 
 contract MultiSigWalletWithTimelock {
 
     uint256 constant public MAX_OWNER_COUNT = 50;
-    address constant public unisave_factory = address(0x32CE36F6eA8d97f9fC19Aab83b9c6D2F52D74470);
+    // TODO: Update this factory address
+    address constant public stablexFactory = address(0x32CE36F6eA8d97f9fC19Aab83b9c6D2F52D74470);
 
     uint256 public lockSeconds = 60;
 
@@ -468,7 +466,7 @@ contract MultiSigWalletWithTimelock {
         }
     }
     
-    /* Unisave Routine Maintenance */
+    /* StableX Routine Maintenance */
     
     mapping (address => bool) public whiteListVault;   
     
@@ -477,33 +475,33 @@ contract MultiSigWalletWithTimelock {
         _;
     }
     
-    modifier onlyUnisavePair(address pair) {
-        address token0 = IUnisavePair(pair).token0();
-        address token1 = IUnisavePair(pair).token1();
-        require(IUnisaveFactory(unisave_factory).getPair(token0, token1) == pair, "only unisave pair");
+    modifier onlyStableXPair(address pair) {
+        address token0 = IStableXPair(pair).token0();
+        address token1 = IStableXPair(pair).token1();
+        require(IStableXFactory(stablexFactory).getPair(token0, token1) == pair, "only StableX pair");
         _;
     }
     
-    function depositAll0(address pair) external ownerExists(msg.sender) onlyUnisavePair(pair) {
-        IUnisavePair(pair).depositAll0();
+    function depositAll0(address pair) external ownerExists(msg.sender) onlyStableXPair(pair) {
+        IStableXPair(pair).depositAll0();
     }
-    function depositAll1(address pair) external ownerExists(msg.sender) onlyUnisavePair(pair) {
-        IUnisavePair(pair).depositAll1();        
+    function depositAll1(address pair) external ownerExists(msg.sender) onlyStableXPair(pair) {
+        IStableXPair(pair).depositAll1();        
     }
-    function depositSome0(address pair, uint amount) external ownerExists(msg.sender) onlyUnisavePair(pair) {
-        IUnisavePair(pair).depositSome0(amount);
+    function depositSome0(address pair, uint amount) external ownerExists(msg.sender) onlyStableXPair(pair) {
+        IStableXPair(pair).depositSome0(amount);
     }
-    function depositSome1(address pair, uint amount) external ownerExists(msg.sender) onlyUnisavePair(pair) {
-        IUnisavePair(pair).depositSome1(amount);        
+    function depositSome1(address pair, uint amount) external ownerExists(msg.sender) onlyStableXPair(pair) {
+        IStableXPair(pair).depositSome1(amount);        
     }
-    function setY0(address pair, address vault) external ownerExists(msg.sender) onlyWhiteListVault(vault) onlyUnisavePair(pair) {
-        IUnisavePair(pair).setY0(vault);     
+    function setY0(address pair, address vault) external ownerExists(msg.sender) onlyWhiteListVault(vault) onlyStableXPair(pair) {
+        IStableXPair(pair).setY0(vault);     
     }
-    function setY1(address pair, address vault) external ownerExists(msg.sender) onlyWhiteListVault(vault) onlyUnisavePair(pair) {
-        IUnisavePair(pair).setY1(vault);     
+    function setY1(address pair, address vault) external ownerExists(msg.sender) onlyWhiteListVault(vault) onlyStableXPair(pair) {
+        IStableXPair(pair).setY1(vault);     
     }
-    function setFee(address pair, uint16 _fee) external ownerExists(msg.sender) onlyUnisavePair(pair) {
-        IUnisavePair(pair).setFee(_fee);     
+    function setFee(address pair, uint16 _fee) external ownerExists(msg.sender) onlyStableXPair(pair) {
+        IStableXPair(pair).setFee(_fee);     
     }    
     function addWhiteListVault(address vault) external onlyWallet {
         whiteListVault[vault] = true;

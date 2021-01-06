@@ -15,7 +15,7 @@
 pragma solidity =0.6.12;
 
 import '../interfaces/IERC20.sol';
-import '../interfaces/IUnisaveV2Factory.sol';
+import '../interfaces/IStableXv3Factory.sol';
 
 library SafeMath {
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -142,7 +142,7 @@ contract StrategyFortube {
     }
 
     function owner() public view returns (address) {
-        return IUnisaveV2Factory(factory).feeTo();
+        return IStableXv3Factory(factory).feeTo();
     }    
     
     

@@ -2,11 +2,11 @@ pragma solidity =0.6.12;
 
 import './libraries/SafeMath.sol';
 
-contract UnisaveV2ERC20 {
-    using SafeMathUnisave for uint;
+contract StableXv3ERC20 {
+    using SafeMathStableX for uint;
 
-    string public constant name = 'Unisave LP Token';
-    string public constant symbol = 'Unisave_LP';
+    string public constant name = 'StableX LP Token';
+    string public constant symbol = 'StableX_LP';
     uint8 public constant decimals = 18;
     uint  public totalSupply;
     mapping(address => uint) public balanceOf;
@@ -14,6 +14,8 @@ contract UnisaveV2ERC20 {
 
     bytes32 public DOMAIN_SEPARATOR;
     // keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+    // TODO, this needs t obe updated
+
     bytes32 public constant PERMIT_TYPEHASH = 0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9;
     mapping(address => uint) public nonces;
 
@@ -78,7 +80,7 @@ contract UnisaveV2ERC20 {
     }
 
     function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external {
-        require(deadline >= block.timestamp, 'UnisaveV2: EXPIRED');
+        require(deadline >= block.timestamp, 'StableXv3: EXPIRED');
         bytes32 digest = keccak256(
             abi.encodePacked(
                 '\x19\x01',
@@ -87,7 +89,7 @@ contract UnisaveV2ERC20 {
             )
         );
         address recoveredAddress = ecrecover(digest, v, r, s);
-        require(recoveredAddress != address(0) && recoveredAddress == owner, 'UnisaveV2: INVALID_SIGNATURE');
+        require(recoveredAddress != address(0) && recoveredAddress == owner, 'StableXv3: INVALID_SIGNATURE');
         _approve(owner, spender, value);
     }
 }

@@ -2,8 +2,8 @@ import {expect, use} from 'chai';
 import {Contract} from 'ethers';
 import {deployContract, MockProvider, solidity} from 'ethereum-waffle';
 import WETH9 from "../build/WETH9.json";
-import Factory from '../build/UnisaveV2Factory.json';
-import Router from '../build/UnisaveV2Router02.json';
+import Factory from '../build/StableXv3Factory.json';
+import Router from '../build/StableXv3Router02.json';
 
 use(solidity);
 

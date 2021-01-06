@@ -1,8 +1,8 @@
-// Root file: contracts/interfaces/IUnisaveV2Factory.sol
+// Root file: contracts/interfaces/IStableXv3Factory.sol
 
 pragma solidity =0.6.12;
 
-interface IUnisaveV2Factory {
+interface IStableXv3Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     function feeTo() external view returns (address);

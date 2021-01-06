@@ -1,7 +1,7 @@
-// Root file: contracts/interfaces/IUnisaveV2Callee.sol
+// Root file: contracts/interfaces/IStableXv3Callee.sol
 
 pragma solidity =0.6.12;
 
-interface IUnisaveV2Callee {
-    function UnisaveV2Call(address sender, uint amount0, uint amount1, bytes calldata data) external;
+interface IStableXv3Callee {
+    function StableXv3Call(address sender, uint amount0, uint amount1, bytes calldata data) external;
 }

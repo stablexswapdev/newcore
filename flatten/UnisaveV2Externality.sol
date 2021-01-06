@@ -1,16 +1,16 @@
-// Dependency file: contracts/interfaces/IUnisaveV2Externality.sol
+// Dependency file: contracts/interfaces/IStableXv3Externality.sol
 
 // pragma solidity =0.6.12;
 
-interface IUnisaveV2Externality {
+interface IStableXv3Externality {
     function getReserves(address tokenA, address tokenB) external view returns (uint, uint);
 }
 
-// Dependency file: contracts/interfaces/IUnisaveV2Factory.sol
+// Dependency file: contracts/interfaces/IStableXv3Factory.sol
 
 // pragma solidity =0.6.12;
 
-interface IUnisaveV2Factory {
+interface IStableXv3Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     function feeTo() external view returns (address);
@@ -27,11 +27,11 @@ interface IUnisaveV2Factory {
 }
 
 
-// Dependency file: contracts/interfaces/IUnisaveV2Pair.sol
+// Dependency file: contracts/interfaces/IStableXv3Pair.sol
 
 // pragma solidity =0.6.12;
 
-interface IUnisaveV2Pair {
+interface IStableXv3Pair {
     event Approval(address indexed owner, address indexed spender, uint value);
     event Transfer(address indexed from, address indexed to, uint value);
 
@@ -88,15 +88,15 @@ interface IUnisaveV2Pair {
     function initialize(address, address) external;
 }
 
-// Root file: contracts/UnisaveV2Externality.sol
+// Root file: contracts/StableXv3Externality.sol
 
 pragma solidity =0.6.12;
 
-// import 'contracts/interfaces/IUnisaveV2Externality.sol';
-// import 'contracts/interfaces/IUnisaveV2Factory.sol';
-// import 'contracts/interfaces/IUnisaveV2Pair.sol';
+// import 'contracts/interfaces/IStableXv3Externality.sol';
+// import 'contracts/interfaces/IStableXv3Factory.sol';
+// import 'contracts/interfaces/IStableXv3Pair.sol';
 
-contract UnisaveV2Externality is IUnisaveV2Externality {
+contract StableXv3Externality is IStableXv3Externality {
 
     address public pancake_factory;
 
@@ -104,9 +104,9 @@ contract UnisaveV2Externality is IUnisaveV2Externality {
     }
 
     function getReserves(address tokenA, address tokenB) external override view returns (uint r0, uint r1) {
-        address pair = IUnisaveV2Factory(pancake_factory).getPair(tokenA, tokenB);
+        address pair = IStableXv3Factory(pancake_factory).getPair(tokenA, tokenB);
         if (pair != address(0)) {
-            (r0, r1, ) = IUnisaveV2Pair(pair).getReserves();
+            (r0, r1, ) = IStableXv3Pair(pair).getReserves();
         }
     }
 }

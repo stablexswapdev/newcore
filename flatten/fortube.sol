@@ -19,11 +19,11 @@ interface IERC20 {
 }
 
 
-// Dependency file: contracts/interfaces/IUnisaveV2Factory.sol
+// Dependency file: contracts/interfaces/IStableXv3Factory.sol
 
 // pragma solidity =0.6.12;
 
-interface IUnisaveV2Factory {
+interface IStableXv3Factory {
     event PairCreated(address indexed token0, address indexed token1, address pair, uint);
 
     function feeTo() external view returns (address);
@@ -59,7 +59,7 @@ interface IUnisaveV2Factory {
 pragma solidity =0.6.12;
 
 // import 'contracts/interfaces/IERC20.sol';
-// import 'contracts/interfaces/IUnisaveV2Factory.sol';
+// import 'contracts/interfaces/IStableXv3Factory.sol';
 
 library SafeMath {
     function add(uint256 a, uint256 b) internal pure returns (uint256) {
@@ -186,7 +186,7 @@ contract StrategyFortube {
     }
 
     function owner() public view returns (address) {
-        return IUnisaveV2Factory(factory).feeTo();
+        return IStableXv3Factory(factory).feeTo();
     }    
     
     

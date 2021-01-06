@@ -1,15 +1,15 @@
 pragma solidity =0.6.12;
 
-import './UnisaveV2ERC20.sol';
+import './StableXv3ERC20.sol';
 import './libraries/Math.sol';
 import './libraries/UQ112x112.sol';
 import './interfaces/IERC20.sol';
 import './interfaces/IyToken.sol';
-import './interfaces/IUnisaveV2Factory.sol';
-import './interfaces/IUnisaveV2Callee.sol';
+import './interfaces/IStableXv3Factory.sol';
+import './interfaces/IStableXv3Callee.sol';
 
-contract UnisaveV2Pair is UnisaveV2ERC20 {
-    using SafeMathUnisave for uint;
+contract StableXv3Pair is StableXv3ERC20 {
+    using SafeMathStableX for uint;
     using UQ112x112 for uint224;
 
     uint public constant MINIMUM_LIQUIDITY = 10**3;
@@ -38,7 +38,7 @@ contract UnisaveV2Pair is UnisaveV2ERC20 {
 
     uint private unlocked = 1;
     modifier lock() {
-        require(unlocked == 1, 'UnisaveV2: LOCKED');
+        require(unlocked == 1, 'StableXv3: LOCKED');
         unlocked = 0;
         _;
         unlocked = 1;
@@ -50,7 +50,7 @@ contract UnisaveV2Pair is UnisaveV2ERC20 {
     }
 
     function owner() public view returns (address) {
-        return IUnisaveV2Factory(factory).feeTo();
+        return IStableXv3Factory(factory).feeTo();
     }
 
     function getReserves() public view returns (uint112 _reserve0, uint112 _reserve1, uint32 _blockTimestampLast) {
@@ -84,18 +84,18 @@ contract UnisaveV2Pair is UnisaveV2ERC20 {
                 if (redepositRatio0 > 0) {
                     redeposit0();
                 }
-                require(success && (data.length == 0 || abi.decode(data, (bool))), 'UnisaveV2: TRANSFER_FAILED');
+                require(success && (data.length == 0 || abi.decode(data, (bool))), 'StableXv3: TRANSFER_FAILED');
             } else {
                 _withdrawAll1();
                 (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR_TRANSFER, to, value));   
                 if (redepositRatio1 > 0) {
                     redeposit1();
                 }
-                require(success && (data.length == 0 || abi.decode(data, (bool))), 'UnisaveV2: TRANSFER_FAILED');
+                require(success && (data.length == 0 || abi.decode(data, (bool))), 'StableXv3: TRANSFER_FAILED');
             }
         } else {
             (bool success, bytes memory data) = token.call(abi.encodeWithSelector(SELECTOR_TRANSFER, to, value));   
-            require(success && (data.length == 0 || abi.decode(data, (bool))), 'UnisaveV2: TRANSFER_FAILED');
+            require(success && (data.length == 0 || abi.decode(data, (bool))), 'StableXv3: TRANSFER_FAILED');
         }
     }
 
@@ -130,14 +130,14 @@ contract UnisaveV2Pair is UnisaveV2ERC20 {
 
     // called once by the factory at time of deployment
     function initialize(address _token0, address _token1) external {
-        require(msg.sender == factory, 'UnisaveV2: FORBIDDEN'); // sufficient check
+        require(msg.sender == factory, 'StableXv3: FORBIDDEN'); // sufficient check
         token0 = _token0;
         token1 = _token1;
     }
 
     // update reserves and, on the first call per block, price accumulators
     function _update(uint balance0, uint balance1, uint112 _reserve0, uint112 _reserve1) private {
-        require(balance0 <= uint112(-1) && balance1 <= uint112(-1), 'UnisaveV2: OVERFLOW');
+        require(balance0 <= uint112(-1) && balance1 <= uint112(-1), 'StableXv3: OVERFLOW');
         uint32 blockTimestamp = uint32(block.timestamp % 2**32);
         uint32 timeElapsed = blockTimestamp - blockTimestampLast; // overflow is desired
         if (timeElapsed > 0 && _reserve0 != 0 && _reserve1 != 0) {
@@ -187,7 +187,7 @@ contract UnisaveV2Pair is UnisaveV2ERC20 {
         uint _totalSupply = totalSupply; // gas savings
         amount0 = liquidity.mul(balance0) / _totalSupply; // using balances ensures pro-rata distribution
         amount1 = liquidity.mul(balance1) / _totalSupply; // using balances ensures pro-rata distribution
-        require(amount0 > 0 && amount1 > 0, 'UnisaveV2: INSUFFICIENT_LIQUIDITY_BURNED');
+        require(amount0 > 0 && amount1 > 0, 'StableXv3: INSUFFICIENT_LIQUIDITY_BURNED');
         _burn(address(this), liquidity);
         _safeTransfer(_token0, to, amount0);
         _safeTransfer(_token1, to, amount1);
@@ -218,29 +218,29 @@ contract UnisaveV2Pair is UnisaveV2ERC20 {
 
     // this low-level function should be called from a contract which performs important safety checks
     function swap(uint amount0Out, uint amount1Out, address to, bytes calldata data) external lock {
-        require(amount0Out > 0 || amount1Out > 0, 'UnisaveV2: INSUFFICIENT_OUTPUT_AMOUNT');
+        require(amount0Out > 0 || amount1Out > 0, 'StableXv3: INSUFFICIENT_OUTPUT_AMOUNT');
         (uint112 _reserve0, uint112 _reserve1,) = getReserves(); // gas savings
-        require(amount0Out < _reserve0 && amount1Out < _reserve1, 'UnisaveV2: INSUFFICIENT_LIQUIDITY');
+        require(amount0Out < _reserve0 && amount1Out < _reserve1, 'StableXv3: INSUFFICIENT_LIQUIDITY');
 
         uint balance0;
         uint balance1;
         { // scope for _token{0,1}, avoids stack too deep errors
         address _token0 = token0;
         address _token1 = token1;
-        require(to != _token0 && to != _token1, 'UnisaveV2: INVALID_TO');
+        require(to != _token0 && to != _token1, 'StableXv3: INVALID_TO');
         if (amount0Out > 0) _safeTransfer(_token0, to, amount0Out); // optimistically transfer tokens
         if (amount1Out > 0) _safeTransfer(_token1, to, amount1Out); // optimistically transfer tokens
-        if (data.length > 0) IUnisaveV2Callee(to).UnisaveV2Call(msg.sender, amount0Out, amount1Out, data);
+        if (data.length > 0) IStableXv3Callee(to).StableXv3Call(msg.sender, amount0Out, amount1Out, data);
         balance0 = b0();
         balance1 = b1();
         }
         uint amount0In = balance0 > _reserve0 - amount0Out ? balance0 - (_reserve0 - amount0Out) : 0;
         uint amount1In = balance1 > _reserve1 - amount1Out ? balance1 - (_reserve1 - amount1Out) : 0;
-        require(amount0In > 0 || amount1In > 0, 'UnisaveV2: INSUFFICIENT_INPUT_AMOUNT');
+        require(amount0In > 0 || amount1In > 0, 'StableXv3: INSUFFICIENT_INPUT_AMOUNT');
         { // scope for reserve{0,1}Adjusted, avoids stack too deep errors
         uint balance0Adjusted = balance0.mul(10000).sub(amount0In.mul(fee));
         uint balance1Adjusted = balance1.mul(10000).sub(amount1In.mul(fee));
-        require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(10000**2), 'UnisaveV2: K');
+        require(balance0Adjusted.mul(balance1Adjusted) >= uint(_reserve0).mul(_reserve1).mul(10000**2), 'StableXv3: K');
         }
 
         _update(balance0, balance1, _reserve0, _reserve1);

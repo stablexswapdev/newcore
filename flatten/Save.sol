@@ -190,7 +190,7 @@ library SafeMath {
 
 contract Uni {
     /// @notice EIP-20 token name for this token
-    string public constant name = "Unisave";
+    string public constant name = "StableX";
 
     /// @notice EIP-20 token symbol for this token
     string public constant symbol = "SAVE";

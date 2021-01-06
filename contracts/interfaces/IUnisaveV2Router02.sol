@@ -1,8 +1,8 @@
 pragma solidity =0.6.12;
 
-import './IUnisaveV2Router01.sol';
+import './IStableXv3Router01.sol';
 
-interface IUnisaveV2Router02 is IUnisaveV2Router01 {
+interface IStableXv3Router02 is IStableXv3Router01 {
     function removeLiquidityETHSupportingFeeOnTransferTokens(
         address token,
         uint liquidity,
